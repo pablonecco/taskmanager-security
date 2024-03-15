@@ -1,9 +1,14 @@
 package com.example.taskmanager.controllers;
 
+import com.example.taskmanager.controllers.request.CreateTaskDTO;
 import com.example.taskmanager.entities.Task;
+import com.example.taskmanager.entities.UserEntity;
+import com.example.taskmanager.repositories.IUserRepository;
 import com.example.taskmanager.services.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class TaskController {
+
+    @Autowired
+    private IUserRepository userRepository;
 
     @Autowired
     @Qualifier("taskService")
@@ -27,8 +35,24 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public Task createTask (@RequestBody Task tarea) {
-        return taskService.insertOrUpdate(tarea);
+    public String createTask (@RequestBody CreateTaskDTO createTaskDTO) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity userEntity = userRepository.findByUsername(user.getUsername());
+
+        Task tarea = Task.builder()
+                        .titulo(createTaskDTO.getTitulo())
+                        .descripcion(createTaskDTO.getDescripcion())
+                        .enCurso(createTaskDTO.isEnCurso())
+                        .nombre(createTaskDTO.getNombre())
+                        .finalizada(createTaskDTO.isFinalizada())
+                        .user(userEntity)
+                        .build();
+
+
+        taskService.insertOrUpdate(tarea);
+
+        return "Tarea creada con exito!";
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,9 +1,7 @@
 package com.example.taskmanager.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,7 +9,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Builder
 @Table(name="tasks")
 public class Task {
 
@@ -39,6 +38,10 @@ public class Task {
 
     @Column(name="en_curso")
     private boolean enCurso;
+
+    @ManyToOne
+    @JoinColumn(name="user_id", nullable = false)
+    private UserEntity user;
 
     @Column(name="created_at", nullable = false, updatable = false)
     @CreationTimestamp

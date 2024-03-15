@@ -1,10 +1,12 @@
 package com.example.taskmanager.services.implementation;
 
+import com.example.taskmanager.entities.UserEntity;
 import com.example.taskmanager.services.ITaskService;
 import com.example.taskmanager.entities.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import com.example.taskmanager.repositories.ITaskRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class TaskService implements ITaskService {
     public List<Task> findAll() {
         return taskRepository.findAll();
     }
+
     public Task insertOrUpdate (Task task) {
         taskRepository.save(task);
         return task;
