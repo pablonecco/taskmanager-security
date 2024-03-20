@@ -3,14 +3,17 @@ package com.example.taskmanager.controllers;
 import com.example.taskmanager.controllers.request.CreateTaskDTO;
 import com.example.taskmanager.entities.Task;
 import com.example.taskmanager.entities.UserEntity;
+import com.example.taskmanager.models.TaskModel;
 import com.example.taskmanager.repositories.IUserRepository;
 import com.example.taskmanager.services.ITaskService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,9 +27,18 @@ public class TaskController {
     @Qualifier("taskService")
     private ITaskService taskService;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @GetMapping("/tasks")
-    public List<Task> getAll () {
-        return taskService.findAll();
+    public List<TaskModel> getAll () {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity userEntity = userRepository.findByUsername(user.getUsername());
+        List<Task> tasks = taskService.findByUser(userEntity);
+        List<TaskModel> tasksModel = new ArrayList<>();
+        for (int i=0; i<tasks.size(); i++) {
+            tasksModel.add(modelMapper.map(tasks.get(i), TaskModel.class));
+        }
+        return tasksModel;
     }
 
     @GetMapping("/task/{id}")

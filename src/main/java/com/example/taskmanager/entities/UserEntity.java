@@ -25,8 +25,8 @@ public class UserEntity {
     @Column(name="password", nullable = false, length = 60)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Task> tasks = new HashSet<>();
+    //@OneToMany(mappedBy = "user")
+    //private Set<Task> tasks = new HashSet<>();
 
     @CreationTimestamp
     @Column(name="created_at", nullable = false, updatable = false)
