@@ -14,7 +14,6 @@ public interface ITaskRepository extends JpaRepository<Task, Serializable> {
     public abstract Task findById (int id);
     public abstract Task findByTitulo (String titulo);
     public abstract List<Task> findByFinalizada(boolean finalizado);
-    @Query("SELECT t FROM Task t WHERE t.user = :user")
     public abstract List<Task> findByUser (UserEntity user);
 
 }

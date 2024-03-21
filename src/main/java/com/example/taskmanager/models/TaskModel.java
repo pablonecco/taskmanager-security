@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class TaskModel {
+    private int id;
     private String titulo;
     private String nombre;
     private String descripcion;
@@ -16,5 +17,4 @@ public class TaskModel {
     private LocalDate fechaFin;
     private boolean finalizada;
     private boolean enCurso;
-
 }
